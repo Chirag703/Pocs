@@ -93,7 +93,7 @@ class AppTheme {
           selectedLabelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
           unselectedLabelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           color: AppColors.cardBackground,
           elevation: 0,
           shape: RoundedRectangleBorder(
