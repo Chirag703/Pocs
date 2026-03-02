@@ -89,12 +89,34 @@ lib/
 # Get dependencies
 flutter pub get
 
-# Run the app
+# Run on Chrome (web)
+flutter run -d chrome
+
+# Run on mobile device / emulator
 flutter run
 
-# Build for release
+# Build web release
+flutter build web --release
+
+# Build Android release
 flutter build apk --release
 ```
+
+## Platform Support
+
+| Platform | Supported |
+|---|---|
+| Android | ✅ |
+| iOS | ✅ |
+| Web | ✅ |
+| macOS | ✅ (desktop layout) |
+| Windows | ✅ (desktop layout) |
+| Linux | ✅ (desktop layout) |
+
+> **Web notes:**  
+> – Portrait-lock and system-UI overlay styles are mobile-only and are automatically skipped on web (`kIsWeb` guard in `main.dart`).  
+> – `permission_handler` (mobile-only) is not included; all features are implemented with web-compatible APIs.  
+> – The `web/` folder contains the standard Flutter web scaffold (`index.html`, `manifest.json`, PWA icons).
 
 ## Design System
 
