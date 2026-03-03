@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/routes/app_router.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 
@@ -115,6 +117,20 @@ class ProfileDetailsScreen extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: 16),
+          // Education section
+          _AddSection(
+            title: 'Education',
+            icon: Icons.school_outlined,
+            onAdd: () => context.push(AppRoutes.addEducation),
+          ),
+          const SizedBox(height: 16),
+          // Employment section
+          _AddSection(
+            title: 'Employment',
+            icon: Icons.work_outline_rounded,
+            onAdd: () => context.push(AppRoutes.addEmployment),
+          ),
         ],
       ),
     );
@@ -181,4 +197,59 @@ class _InfoItem {
   final String value;
 
   const _InfoItem({required this.label, required this.value});
+}
+
+class _AddSection extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final VoidCallback onAdd;
+
+  const _AddSection({
+    required this.title,
+    required this.icon,
+    required this.onAdd,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.lightGrey),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.offWhite,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 20, color: AppColors.textPrimary),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTextStyles.titleMedium),
+                Text('Tap + to add your $title',
+                    style: AppTextStyles.caption),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline,
+                color: AppColors.black),
+            onPressed: onAdd,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+        ],
+      ),
+    );
+  }
 }

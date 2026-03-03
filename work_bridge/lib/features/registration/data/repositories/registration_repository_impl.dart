@@ -1,7 +1,14 @@
+import 'package:dio/dio.dart';
+import '../../../../core/network/api_client.dart';
 import '../../domain/repositories/registration_repository.dart';
 
-/// Mock implementation — replace with real API calls.
+/// Real implementation — POSTs new user to https://api.vynce.cloud/api/users
 class RegistrationRepositoryImpl implements RegistrationRepository {
+  RegistrationRepositoryImpl({required ApiClient apiClient})
+      : _apiClient = apiClient;
+
+  final ApiClient _apiClient;
+
   @override
   Future<void> register({
     required String phone,
@@ -18,8 +25,25 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
     required int expectedSalaryLpa,
     required String noticePeriod,
   }) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 2));
-    // In production: POST to backend
+    try {
+      await _apiClient.createUser({
+        'phone': phone,
+        'name': name,
+        'email': email,
+        'dateOfBirth': dateOfBirth,
+        'gender': gender,
+        'jobTitle': jobTitle,
+        'experienceYears': experienceYears,
+        'company': currentCompany,
+        'skills': skills,
+        'jobType': jobType,
+        'preferredCities': preferredCities,
+        'expectedSalaryLpa': expectedSalaryLpa,
+        'noticePeriod': noticePeriod,
+      });
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data?['message'] ?? 'Registration failed');
+    }
   }
 }

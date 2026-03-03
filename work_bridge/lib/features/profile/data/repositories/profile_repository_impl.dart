@@ -1,45 +1,91 @@
+import 'package:dio/dio.dart';
 import '../../../auth/domain/entities/user.dart';
+import '../../../auth/data/models/user_model.dart';
+import '../../../../core/network/api_client.dart';
 import '../../domain/repositories/profile_repository.dart';
 
-/// Mock implementation
+/// Real implementation — calls https://api.vynce.cloud/api/users
 class ProfileRepositoryImpl implements ProfileRepository {
-  User? _user = const User(
-    id: 'u1',
-    phone: '9876543210',
-    name: 'Rahul Sharma',
-    email: 'rahul@example.com',
-    dateOfBirth: '15/06/1998',
-    gender: 'Male',
-    jobTitle: 'Software Engineer',
-    company: 'TechCorp',
-    experienceYears: 3,
-    skills: ['Flutter', 'Dart', 'Firebase', 'REST APIs'],
-  );
+  ProfileRepositoryImpl({
+    required ApiClient apiClient,
+    required String userId,
+    String? authToken,
+  })  : _apiClient = apiClient,
+        _userId = userId,
+        _authToken = authToken;
 
-  bool _resumeVisible = true;
+  final ApiClient _apiClient;
+  final String _userId;
+  final String? _authToken;
 
   @override
   Future<User?> getProfile() async {
-    await Future.delayed(const Duration(milliseconds: 400));
-    return _user;
+    try {
+      final data =
+          await _apiClient.getUser(_userId, token: _authToken);
+      return UserModel.fromJson(data);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) return null;
+      throw Exception(
+          e.response?.data?['message'] ?? 'Failed to load profile');
+    }
   }
 
   @override
   Future<void> updateProfile(User user) async {
-    await Future.delayed(const Duration(milliseconds: 600));
-    _user = user;
+    try {
+      final model = user is UserModel ? user : _toModel(user);
+      await _apiClient.updateUser(
+        _userId,
+        model.toJson(),
+        token: _authToken,
+      );
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data?['message'] ?? 'Failed to update profile');
+    }
   }
 
   @override
   Future<void> uploadResume(String filePath) async {
-    await Future.delayed(const Duration(seconds: 1));
-    _user = _user?.copyWith(resumeUrl: filePath);
+    try {
+      await _apiClient.updateUser(
+        _userId,
+        {'resumeUrl': filePath},
+        token: _authToken,
+      );
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data?['message'] ?? 'Failed to upload resume');
+    }
   }
 
   @override
   Future<void> toggleResumeVisibility(bool isVisible) async {
-    _resumeVisible = isVisible;
+    try {
+      await _apiClient.updateUser(
+        _userId,
+        {'resumeVisible': isVisible},
+        token: _authToken,
+      );
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data?['message'] ??
+              'Failed to update resume visibility');
+    }
   }
 
-  bool get isResumeVisible => _resumeVisible;
+  UserModel _toModel(User u) => UserModel(
+        id: u.id,
+        phone: u.phone,
+        name: u.name,
+        email: u.email,
+        dateOfBirth: u.dateOfBirth,
+        gender: u.gender,
+        jobTitle: u.jobTitle,
+        company: u.company,
+        experienceYears: u.experienceYears,
+        skills: u.skills,
+        resumeUrl: u.resumeUrl,
+      );
 }

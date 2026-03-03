@@ -10,6 +10,8 @@ import '../../features/registration/presentation/views/profile_created_screen.da
 import '../../features/main_app/views/main_tab_screen.dart';
 import '../../features/home/presentation/views/job_detail_screen.dart';
 import '../../features/home/domain/entities/job.dart';
+import '../../features/education/presentation/views/add_education_step1_screen.dart';
+import '../../features/employment/presentation/views/add_employment_step1_screen.dart';
 
 class AppRoutes {
   AppRoutes._();
@@ -24,6 +26,8 @@ class AppRoutes {
   static const String profileCreated = '/profile-created';
   static const String mainTab = '/main';
   static const String jobDetail = '/job-detail';
+  static const String addEducation = '/profile/add-education';
+  static const String addEmployment = '/profile/add-employment';
 }
 
 class AppRouter {
@@ -83,6 +87,14 @@ class AppRouter {
           final job = state.extra as Job;
           return JobDetailScreen(job: job);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.addEducation,
+        builder: (context, state) => const AddEducationStep1Screen(),
+      ),
+      GoRoute(
+        path: AppRoutes.addEmployment,
+        builder: (context, state) => const AddEmploymentStep1Screen(),
       ),
     ],
   );
