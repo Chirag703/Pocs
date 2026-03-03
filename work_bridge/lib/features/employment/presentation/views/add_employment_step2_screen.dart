@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/routes/app_router.dart';
 import '../cubit/employment_cubit.dart';
 import '../cubit/employment_state.dart';
 
@@ -53,8 +55,7 @@ class _AddEmploymentStep2ScreenState
             const SnackBar(
                 content: Text('Experience saved successfully!')),
           );
-          Navigator.of(context)
-              .popUntil((route) => route.settings.name == '/main' || route.isFirst);
+          context.go(AppRoutes.mainTab);
         }
       },
       child: BlocBuilder<EmploymentCubit, EmploymentState>(

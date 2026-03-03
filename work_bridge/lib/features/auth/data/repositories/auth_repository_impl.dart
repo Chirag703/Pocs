@@ -1,54 +1,65 @@
-import 'dart:async';
+import 'package:dio/dio.dart';
+import '../../../../core/network/api_client.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../models/user_model.dart';
 
-/// Mock implementation — replace with real API/Firebase calls.
+/// Real implementation — calls https://api.vynce.cloud/api/auth
 class AuthRepositoryImpl implements AuthRepository {
-  User? _currentUser;
+  AuthRepositoryImpl({required ApiClient apiClient})
+      : _apiClient = apiClient;
 
-  // Simulated registered users store
-  final Map<String, UserModel> _users = {
-    '9876543210': UserModel(
-      id: 'u1',
-      phone: '9876543210',
-      name: 'Rahul Sharma',
-      email: 'rahul@example.com',
-      jobTitle: 'Software Engineer',
-      company: 'TechCorp',
-      experienceYears: 3,
-      skills: ['Flutter', 'Dart', 'Firebase'],
-    ),
-  };
+  final ApiClient _apiClient;
+  User? _currentUser;
+  String? _authToken;
 
   @override
   Future<void> sendOtp(String phoneNumber) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 1));
-    // In production: call backend / Firebase Auth
+    try {
+      await _apiClient.sendOtp(phoneNumber);
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data?['message'] ?? 'Failed to send OTP');
+    }
   }
 
   @override
   Future<User?> verifyOtp(String phoneNumber, String otp) async {
-    await Future.delayed(const Duration(seconds: 1));
-    // Mock: any 6-digit OTP is accepted
-    if (otp.length != 6) {
-      throw Exception('Invalid OTP');
-    }
-    final user = _users[phoneNumber];
-    if (user != null) {
+    try {
+      final data = await _apiClient.verifyOtp(phoneNumber, otp);
+      if (data == null) return null;
+
+      // API returns token + user (or null user for new number)
+      _authToken = data['token'] as String?;
+      final userJson = data['user'] as Map<String, dynamic>?;
+      if (userJson == null) return null; // new user — needs registration
+
+      final user = UserModel.fromJson(userJson);
       _currentUser = user;
+      return user;
+    } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+      if (statusCode == 404) return null; // user not found → new user
+      throw Exception(
+          e.response?.data?['message'] ?? 'OTP verification failed');
     }
-    return user; // null means new user
   }
 
   @override
-  Future<User?> getCurrentUser() async {
-    return _currentUser;
-  }
+  Future<User?> getCurrentUser() async => _currentUser;
 
   @override
   Future<void> signOut() async {
-    _currentUser = null;
+    try {
+      await _apiClient.signOut(_authToken);
+    } on DioException {
+      // Ignore sign-out errors; clear local state regardless
+    } finally {
+      _currentUser = null;
+      _authToken = null;
+    }
   }
+
+  /// Exposes the auth token so other repositories can use it.
+  String? get authToken => _authToken;
 }
