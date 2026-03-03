@@ -1,20 +1,10 @@
+import '../../../../core/data/dummy_data.dart';
 import '../../../auth/domain/entities/user.dart';
 import '../../domain/repositories/profile_repository.dart';
 
-/// Mock implementation
+/// Dummy-data implementation — no API calls are made.
 class ProfileRepositoryImpl implements ProfileRepository {
-  User? _user = const User(
-    id: 'u1',
-    phone: '9876543210',
-    name: 'Rahul Sharma',
-    email: 'rahul@example.com',
-    dateOfBirth: '15/06/1998',
-    gender: 'Male',
-    jobTitle: 'Software Engineer',
-    company: 'TechCorp',
-    experienceYears: 3,
-    skills: ['Flutter', 'Dart', 'Firebase', 'REST APIs'],
-  );
+  User? _user = DummyData.users['9876543210'];
 
   bool _resumeVisible = true;
 
