@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/routes/app_router.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 
@@ -115,6 +117,20 @@ class ProfileDetailsScreen extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: 16),
+          // Education section
+          _EmptySection(
+            title: AppStrings.addEducation,
+            icon: Icons.school_rounded,
+            onAdd: () => context.push(AppRoutes.addEducation),
+          ),
+          const SizedBox(height: 16),
+          // Employment section
+          _EmptySection(
+            title: AppStrings.addEmployment,
+            icon: Icons.business_center_rounded,
+            onAdd: () => context.push(AppRoutes.addEmployment),
+          ),
         ],
       ),
     );
@@ -181,4 +197,53 @@ class _InfoItem {
   final String value;
 
   const _InfoItem({required this.label, required this.value});
+}
+
+class _EmptySection extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final VoidCallback onAdd;
+
+  const _EmptySection({
+    required this.title,
+    required this.icon,
+    required this.onAdd,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.lightGrey),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.offWhite,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.lightGrey),
+            ),
+            child: Icon(icon, color: AppColors.darkGrey, size: 22),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Text(title, style: AppTextStyles.titleMedium),
+          ),
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline_rounded,
+                color: AppColors.black, size: 22),
+            onPressed: onAdd,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+        ],
+      ),
+    );
+  }
 }

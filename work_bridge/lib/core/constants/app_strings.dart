@@ -101,6 +101,43 @@ class AppStrings {
   static const String signOut = 'Sign Out';
   static const String settings = 'Settings';
 
+  // Education Form
+  static const String addEducation = 'Add Education';
+  static const String editEducation = 'Edit Education';
+  static const String degreeType = 'Degree Type';
+  static const String courseSpecialisation = 'Course / Specialisation';
+  static const String universityCollege = 'University / College';
+  static const String startYear = 'Start Year';
+  static const String endYear = 'End Year';
+  static const String gradeScore = 'Grade / Score';
+  static const String cgpa = 'CGPA';
+  static const String percentage = '%';
+  static const String currentlyStudying = 'Currently Studying Here';
+  static const String achievements = 'Achievements / Highlights';
+  static const String extraCurricular = 'Extra-Curricular Activities';
+  static const String keySkillsLearnt = 'Key Skills Learnt';
+  static const String certificateUrl = 'Certificate / Transcript URL';
+  static const String showOnProfile = 'Show on Profile';
+  static const String saveEducation = 'Save Education';
+  static const String saveAsDraft = 'Save as Draft';
+
+  // Employment Form
+  static const String addEmployment = 'Add Employment';
+  static const String editEmployment = 'Edit Employment';
+  static const String employmentType = 'Employment Type';
+  static const String companyName = 'Company Name';
+  static const String cityLocation = 'City / Location';
+  static const String workMode = 'Work Mode';
+  static const String joiningDate = 'Joining Date';
+  static const String endDate = 'End Date';
+  static const String currentlyWorking = 'Currently Working Here';
+  static const String annualCtc = 'Annual CTC';
+  static const String keyResponsibilities = 'Key Responsibilities';
+  static const String skillsUsed = 'Skills Used';
+  static const String notableAchievements = 'Notable Achievements';
+  static const String saveExperience = 'Save Experience';
+  static const String present = 'Present';
+
   // Common
   static const String loading = 'Loading...';
   static const String error = 'Something went wrong';
