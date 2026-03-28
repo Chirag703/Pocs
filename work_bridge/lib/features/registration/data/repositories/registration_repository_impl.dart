@@ -1,6 +1,6 @@
 import '../../domain/repositories/registration_repository.dart';
 
-/// Mock implementation — replace with real API calls.
+/// Dummy-data implementation — no API calls are made.
 class RegistrationRepositoryImpl implements RegistrationRepository {
   @override
   Future<void> register({
@@ -18,8 +18,6 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
     required int expectedSalaryLpa,
     required String noticePeriod,
   }) async {
-    // Simulate network delay
     await Future.delayed(const Duration(seconds: 2));
-    // In production: POST to backend
   }
 }
